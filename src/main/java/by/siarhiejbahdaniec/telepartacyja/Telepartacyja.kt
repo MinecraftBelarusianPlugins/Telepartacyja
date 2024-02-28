@@ -1,5 +1,6 @@
 package by.siarhiejbahdaniec.telepartacyja
 
+import by.siarhiejbahdaniec.telepartacyja.command.SpawnCommandExecutor
 import by.siarhiejbahdaniec.telepartacyja.config.ConfigHolder
 import org.bukkit.Location
 import org.bukkit.plugin.java.JavaPlugin
@@ -7,12 +8,18 @@ import org.bukkit.plugin.java.JavaPlugin
 class Telepartacyja : JavaPlugin(), ConfigHolder {
 
     override fun onEnable() {
-        setupConfig()
+        initConfig()
+
+        requireNotNull(getCommand("spawn")) {
+            "spawn command must be not null!"
+        }.setExecutor(
+            SpawnCommandExecutor(this)
+        )
     }
 
-    private fun setupConfig() {
+    private fun initConfig() {
         saveDefaultConfig()
-        getConfig().options().copyDefaults(true)
+        config.options().copyDefaults(true)
         saveConfig()
         reloadConfig()
     }
@@ -27,6 +34,11 @@ class Telepartacyja : JavaPlugin(), ConfigHolder {
 
     override fun getLocation(key: String): Location? {
         return config.getLocation(key)
+    }
+
+    override fun setLocation(key: String, location: Location) {
+        config.set(key, location)
+        saveConfig()
     }
 
     override fun reloadConfigFromDisk() {

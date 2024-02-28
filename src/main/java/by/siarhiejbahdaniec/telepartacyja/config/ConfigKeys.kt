@@ -21,13 +21,6 @@ object ConfigKeys {
         const val noPlayer = PREFIX + "no-player"
     }
 
-    const val world = "world"
-    const val x = "x"
-    const val y = "y"
-    const val z = "z"
-    const val yaw = "yaw"
-    const val pitch = "pitch"
-
     const val spawn = "spawn"
     const val firstSpawn = "first-spawn"
 }
