@@ -1,4 +1,4 @@
-package by.siarhiejbahdaniec.telepartacyja.command
+package by.siarhiejbahdaniec.telepartacyja.logic
 
 import by.siarhiejbahdaniec.telepartacyja.config.ConfigHolder
 import by.siarhiejbahdaniec.telepartacyja.config.ConfigKeys
@@ -78,7 +78,7 @@ class SpawnCommandExecutor(
         label: String,
         args: Array<out String>
     ): List<String>? {
-        if (args.isEmpty()) {
+        if (args.size == 1 && sender.isOp) {
             return listOf(PARAM_SET, PARAM_FIRST_SET, PARAM_RELOAD)
         }
 

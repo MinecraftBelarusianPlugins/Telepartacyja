@@ -1,7 +1,9 @@
 package by.siarhiejbahdaniec.telepartacyja
 
-import by.siarhiejbahdaniec.telepartacyja.command.SpawnCommandExecutor
+import by.siarhiejbahdaniec.telepartacyja.logic.SpawnCommandExecutor
 import by.siarhiejbahdaniec.telepartacyja.config.ConfigHolder
+import by.siarhiejbahdaniec.telepartacyja.logic.SpawnEventListener
+import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.plugin.java.JavaPlugin
 
@@ -15,6 +17,12 @@ class Telepartacyja : JavaPlugin(), ConfigHolder {
         }.setExecutor(
             SpawnCommandExecutor(this)
         )
+
+        Bukkit.getPluginManager()
+            .registerEvents(
+                SpawnEventListener(this),
+                this
+            )
     }
 
     private fun initConfig() {
