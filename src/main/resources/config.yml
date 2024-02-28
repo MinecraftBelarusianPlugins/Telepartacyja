@@ -1,0 +1,41 @@
+messages:
+  # successful teleport to spawn
+  teleport: '&aВы на спаўне.'
+  # if the player still has an active teleport cooldown
+  cooldown-left: '&cКалі ласка, пачакайце &4%cooldown% &cсекунд(ы) перад тым як паўтарыць.'
+  #
+  # time left until the player gets teleported to spawn
+  delay-left: '&6Вы будзеце тэлепартаваны праз &e%delay% &6секунд.'
+  # delayed teleport failed because the player moved
+  teleport-canceled: '&cТэлепорт скасаваны. Не рухайцеся!'
+  #
+  # spawn set at current position
+  spawn-set: '&aКропка спаўна абрана'
+  # first spawn set at current position
+  first-spawn-set: '&aКропка спаўна для новых гульцоў абрана'
+  #
+  # config reloaded
+  config-reload: '&aКанфіг перазагружаны'
+  #
+  # no spawn set in config - set one with /spawn set
+  no-spawn: '&cНяма абранай кропкі спаўна!'
+  # no permissions for command
+  no-permission: '&cВы не можаце карыстацца гэтай камандай!'
+  # command cannot be used in console
+  no-player: '&cКаманду можна выкарыстоўваць толькі як гулец!'
+
+spawn:
+  world: world
+  x: -19.5
+  y: 68.0
+  z: -301.5
+  yaw: 176.0
+  pitch: 7.0
+
+first-spawn:
+  world: world
+  x: -19.5
+  y: 68.0
+  z: -301.5
+  yaw: 176.0
+  pitch: 7.0
