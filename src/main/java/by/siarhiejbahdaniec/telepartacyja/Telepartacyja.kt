@@ -2,7 +2,9 @@ package by.siarhiejbahdaniec.telepartacyja
 
 import by.siarhiejbahdaniec.telepartacyja.logic.SpawnCommandExecutor
 import by.siarhiejbahdaniec.telepartacyja.config.ConfigHolder
-import by.siarhiejbahdaniec.telepartacyja.logic.SpawnEventListener
+import by.siarhiejbahdaniec.telepartacyja.logic.FirstSpawnEventListener
+import by.siarhiejbahdaniec.telepartacyja.logic.TeleportExecutor
+import by.siarhiejbahdaniec.telepartacyja.repo.SpawnRepository
 import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.plugin.java.JavaPlugin
@@ -12,17 +14,32 @@ class Telepartacyja : JavaPlugin(), ConfigHolder {
     override fun onEnable() {
         initConfig()
 
+        val repository = SpawnRepository(dataFolder)
+        val teleportExecutor = TeleportExecutor(
+            spawnRepository = repository,
+            configHolder = this,
+        )
+
         requireNotNull(getCommand("spawn")) {
             "spawn command must be not null!"
         }.setExecutor(
-            SpawnCommandExecutor(this)
+            SpawnCommandExecutor(
+                configHolder = this,
+                teleportExecutor = teleportExecutor
+            )
         )
 
-        Bukkit.getPluginManager()
-            .registerEvents(
-                SpawnEventListener(this),
-                this
+        with(Bukkit.getPluginManager()) {
+            val plugin = this@Telepartacyja
+            registerEvents(
+                FirstSpawnEventListener(plugin),
+                plugin
             )
+            registerEvents(
+                teleportExecutor,
+                plugin
+            )
+        }
     }
 
     private fun initConfig() {
@@ -38,6 +55,10 @@ class Telepartacyja : JavaPlugin(), ConfigHolder {
 
     override fun getDouble(key: String): Double {
         return config.getDouble(key, 0.0)
+    }
+
+    override fun getInt(key: String): Int {
+        return config.getInt(key, 0)
     }
 
     override fun getLocation(key: String): Location? {

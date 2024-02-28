@@ -23,4 +23,11 @@ object ConfigKeys {
 
     const val spawn = "spawn"
     const val firstSpawn = "first-spawn"
+
+    object Teleport {
+        private const val PREFIX = "teleport."
+
+        const val delay = PREFIX + "delay"
+        const val cooldown = PREFIX + "cooldown"
+    }
 }

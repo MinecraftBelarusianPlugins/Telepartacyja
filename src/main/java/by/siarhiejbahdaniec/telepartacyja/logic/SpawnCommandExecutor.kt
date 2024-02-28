@@ -10,6 +10,7 @@ import org.bukkit.entity.Player
 
 class SpawnCommandExecutor(
     private val configHolder: ConfigHolder,
+    private val teleportExecutor: TeleportExecutor,
 ) : TabExecutor {
 
     companion object {
@@ -24,6 +25,26 @@ class SpawnCommandExecutor(
         label: String,
         args: Array<out String>
     ): Boolean {
+        if (args.isEmpty()) {
+            if (sender is Player) {
+                val location = configHolder.getLocation(ConfigKeys.spawn)
+                if (location != null) {
+                    teleportExecutor.execute(
+                        player = sender,
+                        location = location
+                    )
+                } else {
+                    sender.setMessageWithColors(
+                        configHolder.getString(ConfigKeys.Messages.noSpawn)
+                    )
+                }
+            } else {
+                sender.setMessageWithColors(
+                    configHolder.getString(ConfigKeys.Messages.noPlayer)
+                )
+            }
+            return true
+        }
 
         if (args.size == 1 && sender.isOp) {
             when (args[0]) {

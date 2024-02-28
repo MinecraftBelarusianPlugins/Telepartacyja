@@ -1,0 +1,39 @@
+package by.siarhiejbahdaniec.telepartacyja.repo
+
+import org.bukkit.Bukkit
+import org.bukkit.configuration.file.YamlConfiguration
+import java.io.File
+import java.io.IOException
+import java.util.*
+import java.util.logging.Level
+
+class SpawnRepository(dir: File) {
+
+    companion object {
+        private const val FILENAME = "spawn.yml"
+
+        private fun getLastTeleportKey(id: UUID): String {
+            return "lastspawn.$id"
+        }
+    }
+
+    private val file by lazy { File(dir, FILENAME) }
+    private val configuration by lazy { YamlConfiguration.loadConfiguration(file) }
+
+    fun setPlayerLastTeleportTime(id: UUID, time: Long) {
+        configuration.set(getLastTeleportKey(id), time)
+        saveData()
+    }
+
+    fun getPlayerLastTeleportTime(id: UUID): Long {
+        return configuration.getLong(getLastTeleportKey(id), 0)
+    }
+
+    private fun saveData() {
+        try {
+            configuration.save(file)
+        } catch (t: IOException) {
+            Bukkit.getLogger().log(Level.WARNING, "Failed to save players timestamps for the PlayerAdsPlugin to a file")
+        }
+    }
+}

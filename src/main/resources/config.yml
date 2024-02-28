@@ -2,10 +2,10 @@ messages:
   # successful teleport to spawn
   teleport: '&aВы на спаўне.'
   # if the player still has an active teleport cooldown
-  cooldown-left: '&cКалі ласка, пачакайце &4%cooldown% &cсекунд(ы) перад тым як паўтарыць.'
+  cooldown-left: '&cКалі ласка, пачакайце &4%s &cсекунд(ы) перад тым як паўтарыць.'
   #
   # time left until the player gets teleported to spawn
-  delay-left: '&6Вы будзеце тэлепартаваны праз &e%delay% &6секунд.'
+  delay-left: '&6Вы будзеце тэлепартаваны праз &e%s &6секунд.'
   # delayed teleport failed because the player moved
   teleport-canceled: '&cТэлепорт скасаваны. Не рухайцеся!'
   #
@@ -39,3 +39,7 @@ first-spawn:
   z: -301.5
   yaw: 176.0
   pitch: 7.0
+
+teleport:
+  delay: 3
+  cooldown: 10
