@@ -5,8 +5,9 @@ import by.siarhiejbahdaniec.telepartacyja.config.ConfigKeys
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerJoinEvent
+import org.bukkit.event.player.PlayerRespawnEvent
 
-class FirstSpawnEventListener(
+class SpawnEventListener(
     private val configHolder: ConfigHolder,
 ): Listener {
 
@@ -19,6 +20,14 @@ class FirstSpawnEventListener(
             if (location != null) {
                 player.teleport(location)
             }
+        }
+    }
+
+    @EventHandler
+    fun onEvent(event: PlayerRespawnEvent) {
+        val spawnLocation = configHolder.getLocation(ConfigKeys.spawn)
+        if (spawnLocation != null) {
+            event.respawnLocation = spawnLocation
         }
     }
 }

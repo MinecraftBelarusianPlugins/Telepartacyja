@@ -2,7 +2,7 @@ package by.siarhiejbahdaniec.telepartacyja
 
 import by.siarhiejbahdaniec.telepartacyja.logic.SpawnCommandExecutor
 import by.siarhiejbahdaniec.telepartacyja.config.ConfigHolder
-import by.siarhiejbahdaniec.telepartacyja.logic.FirstSpawnEventListener
+import by.siarhiejbahdaniec.telepartacyja.logic.SpawnEventListener
 import by.siarhiejbahdaniec.telepartacyja.logic.TeleportExecutor
 import by.siarhiejbahdaniec.telepartacyja.repo.TeleportRepository
 import org.bukkit.Bukkit
@@ -33,7 +33,7 @@ class Telepartacyja : JavaPlugin(), ConfigHolder {
         with(Bukkit.getPluginManager()) {
             val plugin = this@Telepartacyja
             registerEvents(
-                FirstSpawnEventListener(plugin),
+                SpawnEventListener(plugin),
                 plugin
             )
             registerEvents(
