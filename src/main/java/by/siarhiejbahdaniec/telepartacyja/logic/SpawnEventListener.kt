@@ -16,6 +16,7 @@ class SpawnEventListener(
         val player = event.player
         if (!player.hasPlayedBefore()) {
             val location = configHolder.getLocation(ConfigKeys.firstSpawn)
+                ?: configHolder.getLocation(ConfigKeys.spawn)
 
             if (location != null) {
                 player.teleport(location)
