@@ -4,7 +4,7 @@ import by.siarhiejbahdaniec.telepartacyja.logic.SpawnCommandExecutor
 import by.siarhiejbahdaniec.telepartacyja.config.ConfigHolder
 import by.siarhiejbahdaniec.telepartacyja.logic.FirstSpawnEventListener
 import by.siarhiejbahdaniec.telepartacyja.logic.TeleportExecutor
-import by.siarhiejbahdaniec.telepartacyja.repo.SpawnRepository
+import by.siarhiejbahdaniec.telepartacyja.repo.TeleportRepository
 import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.plugin.java.JavaPlugin
@@ -14,10 +14,11 @@ class Telepartacyja : JavaPlugin(), ConfigHolder {
     override fun onEnable() {
         initConfig()
 
-        val repository = SpawnRepository(dataFolder)
+        val repository = TeleportRepository(dataFolder)
         val teleportExecutor = TeleportExecutor(
-            spawnRepository = repository,
+            teleportRepository = repository,
             configHolder = this,
+            plugin = this,
         )
 
         requireNotNull(getCommand("spawn")) {

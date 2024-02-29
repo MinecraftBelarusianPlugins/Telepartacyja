@@ -30,4 +30,10 @@ object ConfigKeys {
         const val delay = PREFIX + "delay"
         const val cooldown = PREFIX + "cooldown"
     }
+
+    object Server {
+        private const val PREFIX = "server."
+
+        const val tps = PREFIX + "tps"
+    }
 }

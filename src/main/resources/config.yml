@@ -25,6 +25,7 @@ messages:
   no-player: '&cКаманду можна выкарыстоўваць толькі як гулец!'
 
 spawn:
+  ==: org.bukkit.Location
   world: world
   x: -19.5
   y: 68.0
@@ -33,6 +34,7 @@ spawn:
   pitch: 7.0
 
 first-spawn:
+  ==: org.bukkit.Location
   world: world
   x: -19.5
   y: 68.0
@@ -43,3 +45,6 @@ first-spawn:
 teleport:
   delay: 3
   cooldown: 10
+
+server:
+  tps: 20

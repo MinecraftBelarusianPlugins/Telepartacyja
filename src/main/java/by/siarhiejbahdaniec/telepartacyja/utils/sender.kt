@@ -2,6 +2,6 @@ package by.siarhiejbahdaniec.telepartacyja.utils
 
 import org.bukkit.command.CommandSender
 
-fun CommandSender.setMessageWithColors(message: String) {
+fun CommandSender.sendMessageWithColors(message: String) {
     this.sendMessage(message.applyColors())
 }

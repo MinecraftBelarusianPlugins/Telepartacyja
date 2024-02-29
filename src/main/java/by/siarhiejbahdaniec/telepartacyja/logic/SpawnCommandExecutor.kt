@@ -2,7 +2,7 @@ package by.siarhiejbahdaniec.telepartacyja.logic
 
 import by.siarhiejbahdaniec.telepartacyja.config.ConfigHolder
 import by.siarhiejbahdaniec.telepartacyja.config.ConfigKeys
-import by.siarhiejbahdaniec.telepartacyja.utils.setMessageWithColors
+import by.siarhiejbahdaniec.telepartacyja.utils.sendMessageWithColors
 import org.bukkit.command.Command
 import org.bukkit.command.CommandSender
 import org.bukkit.command.TabExecutor
@@ -31,15 +31,16 @@ class SpawnCommandExecutor(
                 if (location != null) {
                     teleportExecutor.execute(
                         player = sender,
-                        location = location
+                        location = location,
+                        teleportMessage = configHolder.getString(ConfigKeys.Messages.teleport),
                     )
                 } else {
-                    sender.setMessageWithColors(
+                    sender.sendMessageWithColors(
                         configHolder.getString(ConfigKeys.Messages.noSpawn)
                     )
                 }
             } else {
-                sender.setMessageWithColors(
+                sender.sendMessageWithColors(
                     configHolder.getString(ConfigKeys.Messages.noPlayer)
                 )
             }
@@ -63,7 +64,7 @@ class SpawnCommandExecutor(
         require(sender.isOp)
 
         if (sender !is Player) {
-            sender.setMessageWithColors(configHolder.getString(ConfigKeys.Messages.noPlayer))
+            sender.sendMessageWithColors(configHolder.getString(ConfigKeys.Messages.noPlayer))
             return
         }
 
@@ -75,7 +76,7 @@ class SpawnCommandExecutor(
             },
             location = sender.location
         )
-        sender.setMessageWithColors(
+        sender.sendMessageWithColors(
             message = configHolder.getString(
                 key = if (isFirstSpawn) {
                     ConfigKeys.Messages.firstSpawnSet
@@ -90,7 +91,7 @@ class SpawnCommandExecutor(
         require(sender.isOp)
 
         configHolder.reloadConfigFromDisk()
-        sender.setMessageWithColors(configHolder.getString(ConfigKeys.Messages.configReload))
+        sender.sendMessageWithColors(configHolder.getString(ConfigKeys.Messages.configReload))
     }
 
     override fun onTabComplete(

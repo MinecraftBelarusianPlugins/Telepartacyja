@@ -7,13 +7,13 @@ import java.io.IOException
 import java.util.*
 import java.util.logging.Level
 
-class SpawnRepository(dir: File) {
+class TeleportRepository(dir: File) {
 
     companion object {
-        private const val FILENAME = "spawn.yml"
+        private const val FILENAME = "teleport.yml"
 
         private fun getLastTeleportKey(id: UUID): String {
-            return "lastspawn.$id"
+            return "last_teleport.$id"
         }
     }
 
@@ -33,7 +33,7 @@ class SpawnRepository(dir: File) {
         try {
             configuration.save(file)
         } catch (t: IOException) {
-            Bukkit.getLogger().log(Level.WARNING, "Failed to save players timestamps for the PlayerAdsPlugin to a file")
+            Bukkit.getLogger().log(Level.WARNING, "Failed to save players timestamps for the Telepartacyja to a file")
         }
     }
 }
