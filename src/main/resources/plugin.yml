@@ -7,9 +7,14 @@ depend: [kotlin-stdlib]
 commands:
   spawn:
     usage: /spawn
-    description: тэлепартуе гульца на заданыя каардынаты
+    description: Тэлепартуе гульца на заданыя каардынаты
+    permission: spawn.usage
+    permission-message: Вы не можаце карыстацца гэтай камандай!
 
 permissions:
+  spawn.usage:
+    description: Дае магчымасць гульцу выкарыстоўваць каманду /spawn
+
   spawn.bypass:
     delay:
       description: Адмяняе затрымку перад тэлепартаваннем, гулец які мае пермішан тэлепартуецца адразу пасля выканання каманды.
