@@ -4,7 +4,6 @@ import by.siarhiejbahdaniec.telepartacyja.config.ConfigHolder
 import by.siarhiejbahdaniec.telepartacyja.config.ConfigKeys
 import by.siarhiejbahdaniec.telepartacyja.repo.TeleportRepository
 import by.siarhiejbahdaniec.telepartacyja.utils.sendMessageWithColors
-import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.Particle
 import org.bukkit.entity.Player
@@ -14,8 +13,7 @@ import org.bukkit.event.player.PlayerMoveEvent
 import org.bukkit.event.player.PlayerQuitEvent
 import org.bukkit.plugin.Plugin
 import org.bukkit.scheduler.BukkitRunnable
-import java.util.UUID
-import java.util.logging.Level
+import java.util.*
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.seconds
 
@@ -28,6 +26,10 @@ class TeleportExecutor(
     companion object {
         private val PARTICLES = Particle.PORTAL
         private const val PARTICLES_AMOUNT = 40
+
+        private const val PERMISSION_DELAY_BYPASS = "spawn.bypass.delay"
+        private const val PERMISSION_MOVE_CANCEL_BYPASS = "spawn.bypass.cancel-on-move"
+        private const val PERMISSION_SPAWN_COOLDOWN_BYPASS = "spawn.bypass.cooldown"
     }
 
     private val activeJobs = hashMapOf<UUID, BukkitRunnable>()
@@ -42,25 +44,27 @@ class TeleportExecutor(
             return
         }
 
-        val lastTime = teleportRepository.getPlayerLastTeleportTime(player.uniqueId)
-        val cooldown = configHolder.getInt(ConfigKeys.Teleport.cooldown)
-            .seconds
-            .inWholeMilliseconds
+        if (!player.hasPermission(PERMISSION_SPAWN_COOLDOWN_BYPASS)) {
+            val lastTime = teleportRepository.getPlayerLastTeleportTime(player.uniqueId)
+            val cooldown = configHolder.getInt(ConfigKeys.Teleport.cooldown)
+                .seconds
+                .inWholeMilliseconds
 
-        val difference = System.currentTimeMillis() - lastTime
-        if (difference < cooldown) {
-            kotlin.runCatching {
-                val remain = (cooldown - difference).milliseconds.inWholeSeconds
-                player.sendMessageWithColors(
-                    message = configHolder.getString(ConfigKeys.Messages.cooldownLeft)
-                        .format(remain.toString())
-                )
+            val difference = System.currentTimeMillis() - lastTime
+            if (difference < cooldown) {
+                kotlin.runCatching {
+                    val remain = (cooldown - difference).milliseconds.inWholeSeconds
+                    player.sendMessageWithColors(
+                        message = configHolder.getString(ConfigKeys.Messages.cooldownLeft)
+                            .format(remain.toString())
+                    )
+                }
+                return
             }
-            return
         }
 
         val delay = configHolder.getInt(ConfigKeys.Teleport.delay)
-        if (delay <= 0) {
+        if (delay <= 0 || player.hasPermission(PERMISSION_DELAY_BYPASS)) {
             teleportPlayer(player, location, teleportMessage)
             return
         }
@@ -106,9 +110,6 @@ class TeleportExecutor(
                     kotlin.runCatching {
                         player.sendMessageWithColors(
                             message = configHolder.getString(ConfigKeys.Messages.delayLeft)
-                                .also {
-                                    Bukkit.getLogger().log(Level.WARNING, it)
-                                }
                                 .format(remain.toString())
                         )
                     }
@@ -148,11 +149,27 @@ class TeleportExecutor(
 
     @EventHandler
     fun onMove(event: PlayerMoveEvent) {
+        val id = event.player.uniqueId
+        if (activeJobs.containsKey(id)) {
+            if (event.player.hasPermission(PERMISSION_MOVE_CANCEL_BYPASS)) {
+                return
+            }
 
+            val to = event.to
+            if (to != null && (event.from.distanceSquared(to) < 0.01)) {
+                return
+            }
+
+            activeJobs[id]?.cancel()
+            event.player.sendMessageWithColors(
+                message = configHolder.getString(ConfigKeys.Messages.teleportCancelled)
+            )
+        }
     }
 
     @EventHandler
     fun onLeave(event: PlayerQuitEvent) {
-
+        val id = event.player.uniqueId
+        activeJobs[id]?.cancel()
     }
 }

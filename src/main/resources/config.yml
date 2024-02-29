@@ -7,7 +7,7 @@ messages:
   # time left until the player gets teleported to spawn
   delay-left: '&6Вы будзеце тэлепартаваны праз &e%s &6секунд.'
   # delayed teleport failed because the player moved
-  teleport-canceled: '&cТэлепорт скасаваны. Не рухайцеся!'
+  teleport-cancelled: '&cТэлепорт скасаваны. Не рухайцеся!'
   #
   # spawn set at current position
   spawn-set: '&aКропка спаўна абрана'
@@ -19,8 +19,6 @@ messages:
   #
   # no spawn set in config - set one with /spawn set
   no-spawn: '&cНяма абранай кропкі спаўна!'
-  # no permissions for command
-  no-permission: '&cВы не можаце карыстацца гэтай камандай!'
   # command cannot be used in console
   no-player: '&cКаманду можна выкарыстоўваць толькі як гулец!'
 

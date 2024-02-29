@@ -17,7 +17,6 @@ object ConfigKeys {
         const val configReload = PREFIX + "config-reload"
 
         const val noSpawn = PREFIX + "no-spawn"
-        const val noPermission = PREFIX + "no-permission"
         const val noPlayer = PREFIX + "no-player"
     }
 
