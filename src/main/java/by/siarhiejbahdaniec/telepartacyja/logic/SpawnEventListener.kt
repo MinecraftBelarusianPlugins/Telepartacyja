@@ -26,6 +26,10 @@ class SpawnEventListener(
 
     @EventHandler
     fun onEvent(event: PlayerRespawnEvent) {
+        if (event.isBedSpawn || event.isAnchorSpawn) {
+            return
+        }
+
         val spawnLocation = configHolder.getLocation(ConfigKeys.spawn)
         if (spawnLocation != null) {
             event.respawnLocation = spawnLocation
