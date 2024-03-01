@@ -9,6 +9,7 @@ import org.bukkit.Particle
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
+import org.bukkit.event.entity.EntityDamageEvent
 import org.bukkit.event.player.PlayerMoveEvent
 import org.bukkit.event.player.PlayerQuitEvent
 import org.bukkit.plugin.Plugin
@@ -63,6 +64,8 @@ class TeleportExecutor(
             }
         }
 
+        teleportRepository.setPlayerLastTeleportTime(player.uniqueId, System.currentTimeMillis())
+
         val delay = configHolder.getInt(ConfigKeys.Teleport.delay)
         if (delay <= 0 || player.hasPermission(PERMISSION_DELAY_BYPASS)) {
             teleportPlayer(player, location, teleportMessage)
@@ -91,7 +94,6 @@ class TeleportExecutor(
                 player.sendMessageWithColors(teleportMessage)
             }
         }
-        teleportRepository.setPlayerLastTeleportTime(player.uniqueId, System.currentTimeMillis())
     }
 
     private inner class TeleportDelayRunnable(
@@ -149,9 +151,9 @@ class TeleportExecutor(
 
     @EventHandler
     fun onMove(event: PlayerMoveEvent) {
-        val id = event.player.uniqueId
-        if (activeJobs.containsKey(id)) {
-            if (event.player.hasPermission(PERMISSION_MOVE_CANCEL_BYPASS)) {
+        val player = event.player
+        if (activeJobs.containsKey(player.uniqueId)) {
+            if (player.hasPermission(PERMISSION_MOVE_CANCEL_BYPASS)) {
                 return
             }
 
@@ -160,11 +162,27 @@ class TeleportExecutor(
                 return
             }
 
-            activeJobs[id]?.cancel()
-            event.player.sendMessageWithColors(
-                message = configHolder.getString(ConfigKeys.Messages.teleportCancelled)
-            )
+            cancelTeleportation(player)
         }
+    }
+
+    @EventHandler
+    fun onDamage(event: EntityDamageEvent) {
+        val entity = event.entity
+        if (entity is Player && activeJobs.containsKey(entity.uniqueId)) {
+            if (entity.hasPermission(PERMISSION_MOVE_CANCEL_BYPASS)) {
+                return
+            }
+
+            cancelTeleportation(entity)
+        }
+    }
+
+    private fun cancelTeleportation(player: Player) {
+        activeJobs[player.uniqueId]?.cancel()
+        player.sendMessageWithColors(
+            message = configHolder.getString(ConfigKeys.Messages.teleportCancelled)
+        )
     }
 
     @EventHandler
