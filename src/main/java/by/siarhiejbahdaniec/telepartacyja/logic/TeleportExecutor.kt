@@ -4,6 +4,7 @@ import by.siarhiejbahdaniec.telepartacyja.config.ConfigHolder
 import by.siarhiejbahdaniec.telepartacyja.config.ConfigKeys
 import by.siarhiejbahdaniec.telepartacyja.repo.TeleportRepository
 import by.siarhiejbahdaniec.telepartacyja.utils.sendMessageWithColors
+import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.Particle
 import org.bukkit.entity.Player
@@ -15,6 +16,7 @@ import org.bukkit.event.player.PlayerQuitEvent
 import org.bukkit.plugin.Plugin
 import org.bukkit.scheduler.BukkitRunnable
 import java.util.*
+import java.util.logging.Level
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.seconds
 
@@ -157,32 +159,11 @@ class TeleportExecutor(
                 return
             }
 
-            val to = event.to
-            if (to != null && (event.from.distanceSquared(to) < 0.01)) {
-                return
-            }
-
-            cancelTeleportation(player)
+            activeJobs[player.uniqueId]?.cancel()
+            player.sendMessageWithColors(
+                message = configHolder.getString(ConfigKeys.Messages.teleportCancelled)
+            )
         }
-    }
-
-    @EventHandler
-    fun onDamage(event: EntityDamageEvent) {
-        val entity = event.entity
-        if (entity is Player && activeJobs.containsKey(entity.uniqueId)) {
-            if (entity.hasPermission(PERMISSION_MOVE_CANCEL_BYPASS)) {
-                return
-            }
-
-            cancelTeleportation(entity)
-        }
-    }
-
-    private fun cancelTeleportation(player: Player) {
-        activeJobs[player.uniqueId]?.cancel()
-        player.sendMessageWithColors(
-            message = configHolder.getString(ConfigKeys.Messages.teleportCancelled)
-        )
     }
 
     @EventHandler
