@@ -10,5 +10,6 @@ interface TelepartacyjaApi {
         location: Location,
         teleportMessage: String? = null,
         onComplete: () -> Unit = {},
+        onFailed: () -> Unit = {}
     )
 }

@@ -12,8 +12,9 @@ class TelepartacyjaApiImpl(
         player: Player,
         location: Location,
         teleportMessage: String?,
-        onComplete: () -> Unit
+        onComplete: () -> Unit,
+        onFailed: () -> Unit,
     ) {
-        executor.execute(player, location, teleportMessage, onComplete)
+        executor.execute(player, location, teleportMessage, onComplete, onFailed)
     }
 }
