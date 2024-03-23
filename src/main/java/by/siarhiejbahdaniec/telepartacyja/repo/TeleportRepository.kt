@@ -7,7 +7,7 @@ import java.io.IOException
 import java.util.*
 import java.util.logging.Level
 
-internal class TeleportRepository(dir: File) {
+class TeleportRepository(dir: File) {
 
     companion object {
         private const val FILENAME = "teleport.yml"

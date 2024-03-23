@@ -7,7 +7,7 @@ import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.event.player.PlayerRespawnEvent
 
-internal class SpawnEventListener(
+class SpawnEventListener(
     private val configHolder: ConfigHolder,
 ): Listener {
 
