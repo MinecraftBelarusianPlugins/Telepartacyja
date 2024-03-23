@@ -1,5 +1,5 @@
 plugins {
-    id 'java'
+    id 'java-library'
     id 'org.jetbrains.kotlin.jvm' version "1.9.0"
 }
 
@@ -34,4 +34,19 @@ tasks.withType(JavaCompile).configureEach {
     if (targetJavaVersion >= 10 || JavaVersion.current().isJava10Compatible()) {
         options.release.set(targetJavaVersion)
     }
+}
+
+// Task to create a jar file including the dependencies
+jar {
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+    manifest {
+        // Define main class and other manifest attributes here, if necessary
+        attributes(
+                'Implementation-Title': 'Telepartacyja-API',
+                'Implementation-Version': version
+        )
+    }
+    archiveFileName = "Telepartacyja-API-${version}.jar"
 }
