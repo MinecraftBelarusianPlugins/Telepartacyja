@@ -1,3 +1,5 @@
 /.gradle
 /.idea
 /build
+/api/build
+/bukkit/build
