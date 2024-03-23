@@ -20,7 +20,7 @@ import java.util.logging.Level
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.seconds
 
-class TeleportExecutor(
+internal class TeleportExecutor(
     private val teleportRepository: TeleportRepository,
     private val configHolder: ConfigHolder,
     private val plugin: Plugin,

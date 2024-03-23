@@ -8,7 +8,7 @@ import org.bukkit.command.CommandSender
 import org.bukkit.command.TabExecutor
 import org.bukkit.entity.Player
 
-class SpawnCommandExecutor(
+internal class SpawnCommandExecutor(
     private val configHolder: ConfigHolder,
     private val teleportExecutor: TeleportExecutor,
 ) : TabExecutor {

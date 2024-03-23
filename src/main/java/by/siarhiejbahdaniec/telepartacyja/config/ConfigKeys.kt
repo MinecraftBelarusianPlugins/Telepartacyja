@@ -1,8 +1,8 @@
 package by.siarhiejbahdaniec.telepartacyja.config
 
-object ConfigKeys {
+internal object ConfigKeys {
 
-    object Messages {
+    internal object Messages {
         private const val PREFIX = "messages."
 
         const val teleport = PREFIX + "teleport"
@@ -23,14 +23,14 @@ object ConfigKeys {
     const val spawn = "spawn"
     const val firstSpawn = "first-spawn"
 
-    object Teleport {
+    internal object Teleport {
         private const val PREFIX = "teleport."
 
         const val delay = PREFIX + "delay"
         const val cooldown = PREFIX + "cooldown"
     }
 
-    object Server {
+    internal object Server {
         private const val PREFIX = "server."
 
         const val tps = PREFIX + "tps"

@@ -5,7 +5,7 @@ import java.util.regex.Pattern
 
 private val pattern: Pattern = Pattern.compile("&#[a-fA-F0-9]{6}")
 
-fun String.applyColors(): String {
+internal fun String.applyColors(): String {
     var text = this
     var match = pattern.matcher(text)
     while (match.find()) {
