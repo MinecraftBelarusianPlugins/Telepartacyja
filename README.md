@@ -1,3 +1,4 @@
+
 # Telepartacyja
 Плагін з фунцыяналам для тэлепартацыі гульцоў.
 
@@ -17,3 +18,28 @@
 	 - У тым выпадку калі яны не маюць ложка альбо котвы.   
  - Вы можаце ўсталяваць асобны пункт спаўна для новых гульцоў.
 	 - `/spawn firstset` — патрабуе OP.
+
+# API
+
+Плагін мае ўласны API, праз які распрацоўшчыкі іншых плагінаў могуць карыстацца функцыяналам тэлепартацыі.
+Каб яго выкарыстаць, вам патрэбна імпартаваць Telepartacyja-API-x.x.jar ([Releases](https://github.com/MinecraftBelarusianPlugins/Telepartacyja/releases)) як бібліятэку ва ўласны праэкт.
+Атрымаць API-instance можна праз `ServicesManager`:
+
+**Kotlin**
+
+    import by.siarhiejbahdaniec.telepartacyja.api.TelepartacyjaApi
+    
+    val api = Bukkit.getServicesManager()
+	    .getRegistration(TelepartacyjaApi::class.java)
+	    ?.provider
+
+**Java**
+
+    import by.siarhiejbahdaniec.telepartacyja.api.TelepartacyjaApi
+    
+    TelepartacyjaApi api = null;
+    RegisteredServiceProvider<TelepartacyjaApi> provider = Bukkit.getServicesManager().getRegistration(TelepartacyjaApi.class);
+    
+    if (provider != null) {
+	    api = provider.getProvider();
+   	}
