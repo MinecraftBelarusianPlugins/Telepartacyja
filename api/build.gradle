@@ -1,0 +1,52 @@
+plugins {
+    id 'java-library'
+    id 'org.jetbrains.kotlin.jvm' version "1.9.0"
+}
+
+repositories {
+    mavenCentral()
+    maven {
+        name = "spigotmc-repo"
+        url = "https://hub.spigotmc.org/nexus/content/repositories/snapshots/"
+    }
+    maven {
+        name = "sonatype"
+        url = "https://oss.sonatype.org/content/groups/public/"
+    }
+}
+
+dependencies {
+    compileOnly "org.jetbrains.kotlin:kotlin-stdlib:1.9.0"
+    compileOnly "org.spigotmc:spigot-api:1.20.1-R0.1-SNAPSHOT"
+}
+
+def targetJavaVersion = 17
+java {
+    def javaVersion = JavaVersion.toVersion(targetJavaVersion)
+    if (JavaVersion.current() < javaVersion) {
+        toolchain.languageVersion = JavaLanguageVersion.of(targetJavaVersion)
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+
+    if (targetJavaVersion >= 10 || JavaVersion.current().isJava10Compatible()) {
+        options.release.set(targetJavaVersion)
+    }
+}
+
+// Task to create a jar file including the dependencies
+jar {
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+    manifest {
+        // Define main class and other manifest attributes here, if necessary
+        attributes(
+                'Implementation-Title': 'Telepartacyja-API',
+                'Implementation-Version': version
+        )
+    }
+    archiveFileName = "Telepartacyja-API-${version}.jar"
+}

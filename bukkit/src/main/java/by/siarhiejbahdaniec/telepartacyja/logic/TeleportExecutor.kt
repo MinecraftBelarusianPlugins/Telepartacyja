@@ -40,10 +40,13 @@ class TeleportExecutor(
     fun execute(
         player: Player,
         location: Location,
-        teleportMessage: String? = null
+        teleportMessage: String? = null,
+        onComplete: () -> Unit = {},
+        onFailed: () -> Unit = {}
     ) {
         val id = player.uniqueId
         if (activeJobs.contains(id)) {
+            onFailed()
             return
         }
 
@@ -62,6 +65,7 @@ class TeleportExecutor(
                             .format(remain.toString())
                     )
                 }
+                onFailed()
                 return
             }
         }
@@ -70,20 +74,24 @@ class TeleportExecutor(
 
         val delay = configHolder.getInt(ConfigKeys.Teleport.delay)
         if (delay <= 0 || player.hasPermission(PERMISSION_DELAY_BYPASS)) {
-            teleportPlayer(player, location, teleportMessage)
+            teleportPlayer(player, location, teleportMessage, onComplete)
             return
         }
 
-        startTeleportTimer(delay, player, location, teleportMessage)
+        startTeleportTimer(delay, player, location, teleportMessage, onComplete, onFailed)
     }
 
     private fun teleportPlayer(
         player: Player,
         location: Location,
-        teleportMessage: String?
+        teleportMessage: String?,
+        onComplete: () -> Unit,
     ) {
         with(player) {
             teleport(location)
+
+            onComplete()
+
             spawnParticle(PARTICLES, location, PARTICLES_AMOUNT)
 
             getNearbyEntities(16.0, 16.0, 16.0)
@@ -103,8 +111,9 @@ class TeleportExecutor(
         private val player: Player,
         private val location: Location,
         private val teleportMessage: String?,
+        private val onComplete: () -> Unit,
         private val onCancel: () -> Unit
-    ): BukkitRunnable() {
+    ) : BukkitRunnable() {
 
         private var remain = delay
 
@@ -121,7 +130,7 @@ class TeleportExecutor(
                 }
 
                 remain == 0 -> {
-                    teleportPlayer(player, location, teleportMessage)
+                    teleportPlayer(player, location, teleportMessage, onComplete)
                     cancel()
                 }
             }
@@ -137,7 +146,9 @@ class TeleportExecutor(
         delay: Int,
         player: Player,
         location: Location,
-        teleportMessage: String?
+        teleportMessage: String?,
+        onComplete: () -> Unit,
+        onFailed: () -> Unit
     ) {
         val id = player.uniqueId
         activeJobs[id] = TeleportDelayRunnable(
@@ -145,7 +156,11 @@ class TeleportExecutor(
             player = player,
             location = location,
             teleportMessage = teleportMessage,
-            onCancel = { activeJobs.remove(id) },
+            onComplete = onComplete,
+            onCancel = {
+                activeJobs.remove(id)
+                onFailed()
+            },
         ).apply {
             runTaskTimer(plugin, 0, configHolder.getInt(ConfigKeys.Server.tps).toLong())
         }
