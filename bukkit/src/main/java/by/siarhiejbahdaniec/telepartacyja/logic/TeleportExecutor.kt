@@ -4,19 +4,16 @@ import by.siarhiejbahdaniec.telepartacyja.config.ConfigHolder
 import by.siarhiejbahdaniec.telepartacyja.config.ConfigKeys
 import by.siarhiejbahdaniec.telepartacyja.repo.TeleportRepository
 import by.siarhiejbahdaniec.telepartacyja.utils.sendMessageWithColors
-import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.Particle
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
-import org.bukkit.event.entity.EntityDamageEvent
 import org.bukkit.event.player.PlayerMoveEvent
 import org.bukkit.event.player.PlayerQuitEvent
 import org.bukkit.plugin.Plugin
 import org.bukkit.scheduler.BukkitRunnable
 import java.util.*
-import java.util.logging.Level
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.seconds
 
@@ -112,10 +109,11 @@ class TeleportExecutor(
         private val location: Location,
         private val teleportMessage: String?,
         private val onComplete: () -> Unit,
-        private val onCancel: () -> Unit
+        private val onEnd: (success: Boolean) -> Unit
     ) : BukkitRunnable() {
 
         private var remain = delay
+        private var isSuccess = false
 
         override fun run() {
             when {
@@ -131,13 +129,14 @@ class TeleportExecutor(
 
                 remain == 0 -> {
                     teleportPlayer(player, location, teleportMessage, onComplete)
+                    isSuccess = true
                     cancel()
                 }
             }
         }
 
         override fun cancel() {
-            onCancel()
+            onEnd(isSuccess)
             super.cancel()
         }
     }
@@ -157,9 +156,11 @@ class TeleportExecutor(
             location = location,
             teleportMessage = teleportMessage,
             onComplete = onComplete,
-            onCancel = {
+            onEnd = { success ->
                 activeJobs.remove(id)
-                onFailed()
+                if (!success) {
+                    onFailed()
+                }
             },
         ).apply {
             runTaskTimer(plugin, 0, configHolder.getInt(ConfigKeys.Server.tps).toLong())
