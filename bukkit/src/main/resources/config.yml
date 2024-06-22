@@ -8,6 +8,8 @@ messages:
   delay-left: '&6Вы будзеце тэлепартаваны праз &e%s &6секунд.'
   # delayed teleport failed because the player moved
   teleport-cancelled: '&cТэлепорт скасаваны. Не рухайцеся!'
+  # teleport event was cancelled
+  teleport-cancelled-unknown: '&cТэлепорт чамусьці быў скасаваны ¯\_(ツ)_/¯'
   #
   # spawn set at current position
   spawn-set: '&aКропка спаўна абрана'

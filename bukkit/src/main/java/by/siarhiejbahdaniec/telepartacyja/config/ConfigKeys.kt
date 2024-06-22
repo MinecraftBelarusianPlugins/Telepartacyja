@@ -10,6 +10,7 @@ object ConfigKeys {
 
         const val delayLeft = PREFIX + "delay-left"
         const val teleportCancelled = PREFIX + "teleport-cancelled"
+        const val teleportCancelledUnknown = PREFIX + "teleport-cancelled-unknown"
 
         const val spawnSet = PREFIX + "spawn-set"
         const val firstSpawnSet = PREFIX + "first-spawn-set"

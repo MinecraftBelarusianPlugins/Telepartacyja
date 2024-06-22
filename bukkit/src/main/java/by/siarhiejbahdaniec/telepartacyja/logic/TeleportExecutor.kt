@@ -71,7 +71,11 @@ class TeleportExecutor(
 
         val delay = configHolder.getInt(ConfigKeys.Teleport.delay)
         if (delay <= 0 || player.hasPermission(PERMISSION_DELAY_BYPASS)) {
-            teleportPlayer(player, location, teleportMessage, onComplete)
+            if (teleportPlayer(player, location, teleportMessage)) {
+                onComplete()
+            } else {
+                onFailed()
+            }
             return
         }
 
@@ -82,12 +86,12 @@ class TeleportExecutor(
         player: Player,
         location: Location,
         teleportMessage: String?,
-        onComplete: () -> Unit,
-    ) {
+    ): Boolean {
         with(player) {
-            teleport(location)
-
-            onComplete()
+            if (!teleport(location)) {
+                player.sendMessageWithColors(configHolder.getString(ConfigKeys.Messages.teleportCancelledUnknown))
+                return false
+            }
 
             spawnParticle(PARTICLES, location, PARTICLES_AMOUNT)
 
@@ -101,6 +105,8 @@ class TeleportExecutor(
                 player.sendMessageWithColors(teleportMessage)
             }
         }
+
+        return true
     }
 
     private inner class TeleportDelayRunnable(
@@ -108,7 +114,6 @@ class TeleportExecutor(
         private val player: Player,
         private val location: Location,
         private val teleportMessage: String?,
-        private val onComplete: () -> Unit,
         private val onEnd: (success: Boolean) -> Unit
     ) : BukkitRunnable() {
 
@@ -128,8 +133,7 @@ class TeleportExecutor(
                 }
 
                 remain == 0 -> {
-                    teleportPlayer(player, location, teleportMessage, onComplete)
-                    isSuccess = true
+                    isSuccess = teleportPlayer(player, location, teleportMessage)
                     cancel()
                 }
             }
@@ -155,10 +159,11 @@ class TeleportExecutor(
             player = player,
             location = location,
             teleportMessage = teleportMessage,
-            onComplete = onComplete,
             onEnd = { success ->
                 activeJobs.remove(id)
-                if (!success) {
+                if (success) {
+                    onComplete()
+                } else {
                     onFailed()
                 }
             },
